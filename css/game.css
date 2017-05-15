@@ -1,0 +1,996 @@
+/* MAIN GAME STYLESHEET
+***********************/
+/* Colours
+**********/
+/* Layout variables
+*******************/
+/* CSS animations
+*****************/
+@keyframes logoBob {
+  0% {
+    transform: translateY(0vw); }
+  50% {
+    transform: translateY(-0.5vw); }
+  100% {
+    transform: translateY(0vw); } }
+
+/* Global game styles
+*********************/
+body {
+  background: #222;
+  color: #fff;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  /* Hide scrollbars */ }
+
+canvas {
+  background: #000;
+  margin: 0;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges; }
+
+.canvas--game {
+  width: 100%; }
+
+.canvas--hud, .canvas--webgl, .canvas--bg, .canvas--fg {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent; }
+
+.canvas--bg {
+  z-index: 10; }
+
+.canvas--webgl {
+  z-index: 20; }
+
+.canvas--fg {
+  z-index: 30;
+  pointer-events: none; }
+
+.canvas--debug {
+  width: 67%;
+  margin: 0 auto; }
+
+.debug__performance-stats {
+  display: block;
+  width: auto;
+  background: #000;
+  margin: 0 auto 4px; }
+
+.debug__performance-stat {
+  display: inline-block;
+  margin: 5px;
+  min-width: 128px; }
+
+.debug__tools {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 100; }
+
+.game-gui {
+  display: block;
+  position: relative;
+  width: 100%;
+  font-family: "Orbitron", sans-serif; }
+
+/* HUD stylesheet
+*****************/
+.hud-gui {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  z-index: 300; }
+  .hud-gui.enabled {
+    display: block; }
+  .hud-gui__readout {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start; }
+    .hud-gui__readout:before {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 2vw;
+      height: 2vw;
+      bottom: 1.5vw;
+      left: -2.5vw;
+      background-size: 100% 100%; }
+    .hud-gui__readout-bar--empty, .hud-gui__readout-round--empty, .hud-gui__readout-mag--empty {
+      opacity: 0.3; }
+    .hud-gui__readout-bar {
+      height: 100%;
+      width: 1vw;
+      background-image: url(../img/hud/bar.png);
+      background-size: 100% 100%; }
+    .hud-gui__readout-round {
+      height: 2.5vw;
+      width: 1vw;
+      background-size: 100% 100%; }
+      .hud-gui__readout-round--pistol {
+        background-image: url(../img/hud/round-pistol.png);
+        width: 1.5vw; }
+      .hud-gui__readout-round--assaultrifle {
+        background-image: url(../img/hud/round-pistol.png);
+        width: 1vw; }
+      .hud-gui__readout-round--shotgun {
+        background-image: url(../img/hud/round-pistol.png);
+        width: 1vw; }
+      .hud-gui__readout-round--plasmatest {
+        background-image: url(../img/hud/round-pistol.png);
+        width: 1vw; }
+      .hud-gui__readout-round--nettest {
+        background-image: url(../img/hud/round-pistol.png);
+        width: 1vw; }
+      .hud-gui__readout-round--rockettest {
+        background-image: url(../img/hud/round-pistol.png);
+        width: 1vw; }
+    .hud-gui__readout-mag {
+      height: 2.5vw;
+      width: 2vw;
+      background-size: 100% 100%; }
+      .hud-gui__readout-mag--pistol {
+        background-image: url(../img/hud/mag-pistol.png);
+        width: 2vw; }
+      .hud-gui__readout-mag--assaultrifle {
+        background-image: url(../img/hud/mag-pistol.png);
+        width: 2.5vw; }
+      .hud-gui__readout-mag--shotgun {
+        background-image: url(../img/hud/mag-pistol.png);
+        width: 2.5vw; }
+      .hud-gui__readout-mag--plasmatest {
+        background-image: url(../img/hud/mag-pistol.png);
+        width: 2.5vw; }
+      .hud-gui__readout-mag--nettest {
+        background-image: url(../img/hud/mag-pistol.png);
+        width: 2.5vw; }
+      .hud-gui__readout-mag--rockettest {
+        background-image: url(../img/hud/mag-pistol.png);
+        width: 2.5vw; }
+    .hud-gui__readout--health {
+      bottom: 1vw;
+      left: 3vw;
+      width: 5vw;
+      height: 5vw; }
+      .hud-gui__readout--health:before {
+        background-image: url(../img/hud/cross.png); }
+    .hud-gui__readout--armour {
+      bottom: 1vw;
+      left: 12vw;
+      width: 15vw;
+      height: 5vw; }
+      .hud-gui__readout--armour:before {
+        background-image: url(../img/hud/shield.png); }
+    .hud-gui__readout--mag-ammo {
+      bottom: 1vw;
+      right: 26vw;
+      width: 15vw;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: flex-start;
+      align-content: flex-start;
+      flex-wrap: wrap;
+      overflow: hidden; }
+    .hud-gui__readout--total-ammo {
+      bottom: 1vw;
+      right: 15vw;
+      width: 10vw;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: flex-start;
+      align-content: flex-start;
+      flex-wrap: wrap;
+      overflow: hidden; }
+    .hud-gui__readout--items {
+      right: 1vw;
+      bottom: 1vw;
+      width: 12.5vw;
+      height: auto;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: flex-end;
+      background: none; }
+      .hud-gui__readout--items .hud-gui__readout-item {
+        width: 100%;
+        margin-bottom: 1vw; }
+        .hud-gui__readout--items .hud-gui__readout-item--offhand {
+          width: 75%; }
+        .hud-gui__readout--items .hud-gui__readout-item:first-child {
+          margin-bottom: 0; }
+        .hud-gui__readout--items .hud-gui__readout-item--pistol {
+          height: 8vw; }
+          .hud-gui__readout--items .hud-gui__readout-item--pistol.hud-gui__readout-item--offhand {
+            height: 6vw; }
+        .hud-gui__readout--items .hud-gui__readout-item--assaultrifle {
+          height: 8vw; }
+          .hud-gui__readout--items .hud-gui__readout-item--assaultrifle.hud-gui__readout-item--offhand {
+            height: 4vw; }
+        .hud-gui__readout--items .hud-gui__readout-item--shotgun {
+          height: 8vw; }
+          .hud-gui__readout--items .hud-gui__readout-item--shotgun.hud-gui__readout-item--offhand {
+            height: 3vw; }
+    .hud-gui__readout-item {
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      width: 100%;
+      height: 100%; }
+      .hud-gui__readout-item--pistol {
+        background-image: url(../img/hud/items/pistol.png); }
+      .hud-gui__readout-item--assaultrifle {
+        background-image: url(../img/hud/items/assaultrifle.png); }
+      .hud-gui__readout-item--shotgun {
+        background-image: url(../img/hud/items/shotgun.png); }
+  .hud-gui__target-indicator {
+    display: block;
+    position: absolute;
+    bottom: 12vw;
+    right: 49vw;
+    width: 2vw;
+    height: 2vw;
+    background-color: #18fc00;
+    border-radius: 2vw;
+    opacity: 0; }
+    .hud-gui__target-indicator--active {
+      opacity: 1.0; }
+
+/* Menu system stylesheet
+*************************/
+.menu {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 400; }
+  .menu.show {
+    display: block; }
+  .menu__screen {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: 0.2vw solid #666;
+    box-shadow: 0 0 3.5vw #000; }
+    .menu__screen.show {
+      display: block; }
+    .menu__screen.has--init .menu__logo {
+      animation-name: logoBob;
+      animation-duration: 1.5s;
+      animation-iteration-count: infinite;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+      transform: translateY(0vh);
+      animation-delay: 1s;
+      /* must match length of any intro transition */ }
+    .menu__screen--main {
+      border: none;
+      box-shadow: none; }
+      .menu__screen--main .menu__logo {
+        top: 7.5vh;
+        width: 50vw;
+        transition: transform 1s cubic-bezier(1, 0, 0.75, 1);
+        transform: translateY(-75vh); }
+      .menu__screen--main .menu__button {
+        transition: transform 1s cubic-bezier(0.84, 0.01, 0.89, 1.33);
+        transform: translateX(-200vw); }
+      .menu__screen--main.has--init .menu__button--newgame, .menu__screen--main.has--init .menu__button--loadgame, .menu__screen--main.has--init .menu__button--options {
+        transform: translateX(0vw); }
+      .menu__screen--main.has--init .menu__button--newgame {
+        transition-delay: 0.8s; }
+      .menu__screen--main.has--init .menu__button--loadgame {
+        transition-delay: 0.95s; }
+      .menu__screen--main.has--init .menu__button--options {
+        transition-delay: 1.1s; }
+    .menu__screen--dialog {
+      background-color: rgba(0, 0, 0, 0.667); }
+      .menu__screen--dialog .menu__logo {
+        top: 5%; }
+    .menu__screen--loadgame .menu__panel:first-child {
+      margin-bottom: 2.5vw; }
+    .menu__screen--loadgame .menu__panel:nth-child(2) {
+      flex-grow: 6; }
+    .menu__screen--loadgame .menu__panel--row:last-child .menu__button {
+      position: absolute;
+      bottom: 2.5vw; }
+      .menu__screen--loadgame .menu__panel--row:last-child .menu__button--delete {
+        left: 10vw; }
+      .menu__screen--loadgame .menu__panel--row:last-child .menu__button--load {
+        right: 10vw; }
+      .menu__screen--loadgame .menu__panel--row:last-child .menu__button--deleteall {
+        left: auto;
+        right: auto; }
+    .menu__screen--loadgame .menu__logo {
+      position: absolute;
+      right: 10vw;
+      top: 2.5vw;
+      font-size: 5vw; }
+    .menu__screen--loadgame .menu__button--cancel {
+      position: absolute;
+      top: 3vw;
+      left: 10vw; }
+    .menu__screen--pause .menu__bg, .menu__screen--death .menu__bg {
+      background: rgba(0, 0, 0, 0.667); }
+    .menu__screen--pause .menu__logo {
+      top: 7.5vw; }
+    .menu__screen--death .menu__logo {
+      top: 15vw; }
+    .menu__screen--options .menu__logo--tertiary {
+      margin-top: 0vw; }
+    .menu__screen--options .menu__button--cancel {
+      position: absolute;
+      top: 3vw;
+      left: 3vw; }
+  .menu__dialog-details {
+    font-size: 24px;
+    font-weight: bold;
+    padding: 0 20%;
+    margin-top: 20%; }
+  .menu__logo {
+    display: block;
+    position: absolute;
+    top: 4vw;
+    left: auto;
+    right: auto;
+    font-size: 7.5vw;
+    font-weight: 900;
+    margin: 0;
+    background: -webkit-linear-gradient(#001eff, #00ffb4);
+    user-select: none;
+    cursor: default;
+    -webkit-backface-visibility: hidden;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke-width: 0.25vw;
+    -webkit-text-stroke-color: #484848; }
+    .menu__logo--secondary {
+      top: 2.5vw; }
+    .menu__logo--tertiary {
+      font-size: 3vw;
+      position: relative;
+      top: 0;
+      margin-top: 5vw;
+      background: #a8a8a8;
+      -webkit-background-clip: text;
+      -webkit-text-stroke-width: 0.2vw;
+      -webkit-text-stroke-color: #000; }
+  .menu input[type=range] {
+    -webkit-appearance: none;
+    background: transparent;
+    cursor: pointer; }
+  .menu input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; }
+  .menu input[type=range]:focus {
+    outline: none; }
+  .menu input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 20px;
+    background-color: #00b5be;
+    cursor: pointer;
+    margin-top: -6px; }
+  .menu input[type=range]:focus::-webkit-slider-thumb {
+    background-color: #00f3ff; }
+  .menu input[type=range]::-webkit-slider-runnable-track {
+    background-color: #0071c0;
+    width: 100%;
+    height: 6px;
+    cursor: pointer; }
+  .menu input[type=range]:focus::-webkit-slider-runnable-track {
+    background-color: #0096ff; }
+  .menu__slider {
+    display: flex; }
+    .menu__slider .menu__label, .menu__slider-range, .menu__slider-output {
+      height: 5vw;
+      line-height: 5vw;
+      margin-right: 2vw;
+      font-size: 2vw;
+      font-weight: 900;
+      color: #ff00ff;
+      flex-grow: 1; }
+      .menu__slider .menu__label:last-child, .menu__slider-range:last-child, .menu__slider-output:last-child {
+        margin-right: 0; }
+    .menu__slider .menu__label {
+      width: 20vw;
+      text-align: center; }
+    .menu__slider-range {
+      width: 50vw;
+      flex-grow: 2; }
+    .menu__slider-output {
+      width: 20vw;
+      text-align: left; }
+  .menu__label {
+    margin: 0; }
+  .menu__bg, .menu__content {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0; }
+  .menu__content--dialog {
+    display: flex;
+    position: absolute;
+    top: 15%;
+    right: 15%;
+    bottom: 15%;
+    left: 15%;
+    background: #333;
+    border: 1px solid #ccc;
+    flex-direction: column;
+    justify-content: center; }
+  .menu__bg--0 {
+    background-image: url("../img/gui/starfield.png"); }
+  .menu__bg--1 {
+    background-image: linear-gradient(to top, #9696ff, 1%, blue, 15%, black, 60%, rgba(0, 0, 0, 0.1)); }
+  .menu__panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    flex-grow: 1;
+    width: 100%;
+    position: relative; }
+    .menu__panel--row {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center; }
+    .menu__panel:first-child {
+      align-items: flex-end; }
+  .menu__scrolling-list {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: 2.5vw 10vw;
+    background: #000;
+    padding: 0;
+    overflow-y: scroll;
+    height: 35vw;
+    border: 0.1vw solid #ccc;
+    border-right: none; }
+    .menu__scrolling-list::-webkit-scrollbar {
+      width: 2vw; }
+    .menu__scrolling-list::-webkit-scrollbar-track {
+      background: #000;
+      cursor: pointer; }
+    .menu__scrolling-list::-webkit-scrollbar-thumb, .menu__scrolling-list::-webkit-scrollbar-button {
+      background-color: #444;
+      border: 0.1vw solid #ccc; }
+    .menu__scrolling-list::-webkit-scrollbar-thumb {
+      cursor: pointer; }
+    .menu__scrolling-list::-webkit-scrollbar-button {
+      cursor: pointer;
+      height: 2vw; }
+  .menu__saved-game-list-item {
+    display: block;
+    background: #444;
+    text-align: left;
+    margin: 0 0.25vw 0.25vw 0.25vw;
+    border: 1px solid transparent;
+    list-style-type: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 2.5%;
+    cursor: pointer; }
+    .menu__saved-game-list-item:first-child {
+      margin-top: 0.25vw; }
+    .menu__saved-game-list-item:hover, .menu__saved-game-list-item:focus {
+      background: #666;
+      outline: none; }
+    .menu__saved-game-list-item.selected {
+      background: #888;
+      border: 0.1vw solid #ccc; }
+  .menu__button {
+    display: block;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #000;
+    margin: 0 auto;
+    padding: 0.75vw 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    text-transform: uppercase;
+    font-size: 2.85vw;
+    font-family: "Orbitron", sans-serif;
+    font-weight: 900;
+    -webkit-text-stroke: #ff00ff 0.2vw; }
+    .menu__button-stack {
+      height: 60%;
+      margin: 5vw auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center; }
+      .menu__screen--main .menu__button-stack {
+        height: 35%; }
+    .menu__button:hover, .menu__button:active, .menu__button:visited, .menu__button:focus {
+      outline: none; }
+    .menu__button:hover, .menu__button:focus {
+      color: #00f3ff;
+      -webkit-text-stroke: #8e008e 0.2vw; }
+  .menu__author-info {
+    font-size: 2vw;
+    display: block;
+    position: absolute;
+    bottom: 1vw;
+    right: 1vw; }
+
+.ingame-gui {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  z-index: 200; }
+  .ingame-gui__title--inventory {
+    margin-left: auto;
+    margin-right: auto;
+    width: 15%; }
+  .ingame-gui__title--logs {
+    width: 40%; }
+  .ingame-gui__notification-list {
+    display: block;
+    position: absolute;
+    bottom: 6vw;
+    left: 1vw;
+    width: 40vw;
+    list-style-type: none;
+    padding: 0;
+    z-index: 100; }
+  .ingame-gui__notification-item {
+    text-align: left;
+    margin-bottom: 0.5vw;
+    font-size: 1.5vw;
+    color: #18fc00; }
+  .ingame-gui__screen {
+    display: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.667);
+    border: 1px solid #18fc00;
+    font-size: 1.25vw;
+    pointer-events: auto;
+    z-index: 110; }
+    .ingame-gui__screen.show {
+      display: block; }
+    .ingame-gui__screen--loot {
+      left: 5vw;
+      width: 25vw; }
+    .ingame-gui__screen--logs {
+      left: 5vw;
+      width: 33vw; }
+      .ingame-gui__screen--logs .ingame-gui__scrolling-list {
+        border: 1px solid #18fc00;
+        border-right: none; }
+      .ingame-gui__screen--logs .ingame-gui__scrolling-list-legend {
+        color: #18fc00; }
+      .ingame-gui__screen--logs .ingame-gui__title--secondary {
+        line-height: 2vw; }
+    .ingame-gui__screen--doorlock {
+      right: 5vw;
+      width: 25vw; }
+    .ingame-gui__screen__title {
+      display: block;
+      margin-left: 1vw;
+      height: 100%;
+      margin-top: 1vw;
+      margin-bottom: 1vw; }
+    .ingame-gui__screen--inventory {
+      top: 50%;
+      right: 11vw;
+      left: 11vw;
+      transform: translateY(-55%); }
+      .ingame-gui__screen--inventory .ingame-gui__row.ingame-gui--list .ingame-gui__scrolling-list {
+        height: 32vw; }
+      .ingame-gui__screen--inventory .ingame-gui__row--title {
+        margin-left: 0; }
+    .ingame-gui__screen-content {
+      display: flex;
+      flex-direction: row;
+      height: 38vw; }
+  .ingame-gui__close {
+    display: block;
+    position: absolute;
+    top: 1vw;
+    right: 1vw;
+    width: 3.25vw;
+    height: 3.25vw;
+    background-color: transparent;
+    border: 1px solid #18fc00;
+    color: #18fc00;
+    cursor: pointer; }
+    .ingame-gui__close:hover {
+      background-color: rgba(0, 0, 0, 0.667); }
+  .ingame-gui__scrolling-list-legend, .ingame-gui__scrolling-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 1vw; }
+  .ingame-gui__scrolling-list-legend {
+    background: transparent;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    border-bottom: none; }
+  .ingame-gui__legend-item {
+    text-transform: uppercase;
+    padding: 0.25vw 0;
+    text-transform: uppercase;
+    width: 33%;
+    padding-left: 1vw;
+    text-align: left; }
+  .ingame-gui__legend-item--date, .ingame-gui__log-item--date {
+    width: 20%; }
+  .ingame-gui__legend-item--type, .ingame-gui__log-item--type {
+    width: 20%; }
+  .ingame-gui__legend-item--title, .ingame-gui__log-item--title {
+    width: 60%; }
+  .ingame-gui__scrolling-list {
+    background: transparent;
+    height: calc(82%);
+    border-right: none;
+    overflow-y: scroll;
+    overflow-x: hidden; }
+  .ingame-gui__scrolling-list::-webkit-scrollbar, .ingame-gui__log-display::-webkit-scrollbar, .ingame-gui__item-details-container::-webkit-scrollbar {
+    width: 2vw; }
+  .ingame-gui__scrolling-list::-webkit-scrollbar-track, .ingame-gui__log-display::-webkit-scrollbar-track, .ingame-gui__item-details-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.667);
+    cursor: pointer;
+    border: 1px solid #18fc00; }
+  .ingame-gui__scrolling-list::-webkit-scrollbar-thumb, .ingame-gui__log-display::-webkit-scrollbar-thumb, .ingame-gui__item-details-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.667);
+    cursor: pointer;
+    border: 1px solid #18fc00; }
+  .ingame-gui__scrolling-list::-webkit-scrollbar-button, .ingame-gui__log-display::-webkit-scrollbar-button, .ingame-gui__item-details-container::-webkit-scrollbar-button {
+    background-color: rgba(0, 0, 0, 0.667);
+    cursor: pointer;
+    height: 25px;
+    border: 1px solid #18fc00; }
+  .ingame-gui__log-item {
+    padding-top: 0.5vw;
+    padding-bottom: 0.35vw;
+    background: transparent;
+    border-bottom: 1px solid #18fc00;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    color: #18fc00; }
+    .ingame-gui__log-item:last-child {
+      border-bottom: none; }
+    .ingame-gui__log-item:hover, .ingame-gui__log-item.is--selected {
+      background: rgba(0, 0, 0, 0.667); }
+    .ingame-gui__log-item--date, .ingame-gui__log-item--type, .ingame-gui__log-item--title {
+      display: inline-flex;
+      padding-left: 1vw;
+      text-align: left; }
+  .ingame-gui__sort-by {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 1vw;
+    margin: 0;
+    height: 100%;
+    overflow: hidden; }
+    .ingame-gui__sort-by-label {
+      width: 20%; }
+  .ingame-gui__sort-button {
+    width: 25%;
+    background: transparent;
+    border: 1px solid #18fc00;
+    margin-left: 1vw;
+    color: #18fc00;
+    cursor: pointer;
+    font-family: "Orbitron", sans-serif;
+    font-size: 1vw;
+    font-weight: 900;
+    text-transform: uppercase; }
+    .ingame-gui__sort-button:hover, .ingame-gui__sort-button:focus {
+      outline: none;
+      background-color: rgba(0, 0, 0, 0.667); }
+  .ingame-gui__log-display {
+    display: block;
+    height: calc(100% - 2px);
+    background: transparent;
+    border: 1px solid #18fc00;
+    border-right: none;
+    margin-left: 1vw;
+    margin-right: 1vw;
+    text-align: left;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    color: #18fc00; }
+  .ingame-gui__log-display-container {
+    padding: 1vw; }
+    .ingame-gui__log-display-container > * {
+      margin-top: 0;
+      margin-bottom: 1vw; }
+      .ingame-gui__log-display-container > *:last-child {
+        margin-bottom: 0; }
+  .ingame-gui__row {
+    margin-bottom: 3%;
+    overflow: hidden; }
+    .ingame-gui__row--title {
+      height: 5vw;
+      text-align: left;
+      margin-left: 1vw;
+      margin-bottom: 0; }
+      .ingame-gui__screen--inventory .ingame-gui__row--title {
+        text-align: center; }
+    .ingame-gui__row--list {
+      height: 15vw;
+      border: 1px solid #18fc00; }
+      .ingame-gui__row--list .ingame-gui__scrolling-list--inventory-items {
+        height: 28vw;
+        padding-top: 1vw;
+        margin: 0; }
+    .ingame-gui__row--sortby {
+      height: 2vw; }
+    .ingame-gui__row--display {
+      height: 20vw; }
+    .ingame-gui__row--numeric-display {
+      height: 5vw;
+      margin-left: 1vw;
+      margin-right: 1vw;
+      font-size: 5vw;
+      line-height: 4.6vw;
+      color: #18fc00; }
+    .ingame-gui__row--numeric-keypad {
+      height: 20vw; }
+    .ingame-gui__row--item-details {
+      height: 23vw;
+      background: transparent;
+      border: 1px solid #18fc00; }
+    .ingame-gui__row--equipped-items {
+      height: 7.65vw;
+      background: transparent;
+      border: 1px solid #18fc00; }
+  .ingame-gui__column--stored-items, .ingame-gui__column--equipped-items {
+    width: 50%;
+    position: relative; }
+  .ingame-gui__column--stored-items {
+    margin-left: 1vw;
+    margin-right: 0.5vw; }
+    .ingame-gui__column--stored-items .ingame-gui__row--buttons {
+      margin-bottom: 0; }
+    .ingame-gui__column--stored-items .ingame-gui__row--list {
+      height: calc(32vw + 2px); }
+  .ingame-gui__column--equipped-items {
+    margin-left: 0.5vw;
+    margin-right: 1vw; }
+  .ingame-gui__item-details {
+    position: relative;
+    height: 100%;
+    color: #18fc00;
+    user-select: none; }
+    .ingame-gui__item-details-container {
+      height: calc(100% - 2vw);
+      padding: 1vw;
+      text-align: left;
+      overflow-y: scroll; }
+    .ingame-gui__item-details-row {
+      height: 14vw;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 2vw; }
+    .ingame-gui__item-details-title {
+      margin: 0 0 1vw 0; }
+    .ingame-gui__item-details-icon {
+      width: 13.5vw;
+      height: 13.5vw;
+      border: 1px solid #18fc00;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat; }
+    .ingame-gui__item-details-stats {
+      background: transparent;
+      border: 1px solid #18fc00;
+      max-width: 55%;
+      font-size: 1vw; }
+      .ingame-gui__item-details-stats tr:last-child td {
+        border-bottom: none; }
+      .ingame-gui__item-details-stats td {
+        border-bottom: 1px solid #18fc00;
+        border-right: 1px solid #18fc00;
+        padding: 0.25vw 1vw 0.25vw 0.5vw; }
+        .ingame-gui__item-details-stats td:last-child {
+          border-right: none; }
+    .ingame-gui__item-details-description {
+      text-align: justify;
+      margin: 0;
+      padding-top: 1vw; }
+  .ingame-gui__equipped-items {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; }
+  .ingame-gui__equip-slot {
+    width: 33.333%;
+    padding: 1vw 0vw 1vw 1vw; }
+    .ingame-gui__equip-slot:last-child {
+      padding-right: 1vw; }
+    .ingame-gui__equip-slot-container {
+      position: relative;
+      background-color: transparent;
+      width: 100%;
+      height: 100%;
+      border: 1px solid #18fc00; }
+    .ingame-gui__equip-slot-item {
+      display: block;
+      position: absolute;
+      top: 0.3vw;
+      right: 0.3vw;
+      left: 0.3vw;
+      bottom: 0.3vw;
+      color: #18fc00;
+      overflow: hidden;
+      cursor: pointer;
+      cursor: -webkit-grab;
+      padding: 0.5vw;
+      user-select: none;
+      background-color: rgba(0, 0, 0, 0.667);
+      opacity: 0.5;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      pointer-events: all; }
+      .ingame-gui__equip-slot-item-icon {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: 100%; }
+      .ingame-gui__equip-slot-item:hover, .ingame-gui__equip-slot-item.is--selected:hover {
+        opacity: 1.0; }
+      .ingame-gui__equip-slot-item.is--selected {
+        opacity: 0.8;
+        top: 0.1vw;
+        right: 0.1vw;
+        left: 0.1vw;
+        bottom: 0.1vw; }
+  .ingame-gui__numeric-display {
+    background: rgba(24, 252, 0, 0.2);
+    height: calc(100% - 4px);
+    border: 1px solid #18fc00;
+    font-size: 4.5vw;
+    color: #18fc00;
+    padding-left: 2.5vw;
+    text-align: left; }
+  .ingame-gui__numeric-keypad {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 0 1vw;
+    background: transparent;
+    height: calc(100% - 2px);
+    border: 1px solid #18fc00; }
+    .ingame-gui__numeric-keypad-button {
+      width: 33.333%;
+      height: 25%;
+      background: transparent;
+      font-size: 2vw;
+      color: #18fc00;
+      cursor: pointer;
+      border: 2px solid rgba(24, 252, 0, 0.2); }
+      .ingame-gui__numeric-keypad-button.is--selected, .ingame-gui__numeric-keypad-button:active, .ingame-gui__numeric-keypad-button:hover, .ingame-gui__numeric-keypad-button:focus {
+        outline: none;
+        background: rgba(0, 0, 0, 0.667); }
+      .ingame-gui__numeric-keypad-button--7, .ingame-gui__numeric-keypad-button--8, .ingame-gui__numeric-keypad-button--9 {
+        border-top-width: 4px; }
+      .ingame-gui__numeric-keypad-button--9, .ingame-gui__numeric-keypad-button--6, .ingame-gui__numeric-keypad-button--3, .ingame-gui__numeric-keypad-button--enter {
+        border-right-width: 4px; }
+      .ingame-gui__numeric-keypad-button--0, .ingame-gui__numeric-keypad-button--cancel, .ingame-gui__numeric-keypad-button--enter {
+        border-bottom-width: 4px; }
+      .ingame-gui__numeric-keypad-button--7, .ingame-gui__numeric-keypad-button--4, .ingame-gui__numeric-keypad-button--1, .ingame-gui__numeric-keypad-button--0 {
+        border-left-width: 4px; }
+  .ingame-gui__inventory-item {
+    display: flex;
+    flex-direction: row;
+    height: 2.5vw;
+    padding: 1vw;
+    background: rgba(0, 0, 0, 0.667);
+    border: 1px solid #18fc00;
+    cursor: pointer;
+    cursor: -webkit-grab;
+    margin: 0.5vw;
+    color: #18fc00;
+    opacity: 0.5;
+    user-select: none; }
+    .ingame-gui__inventory-item:hover, .ingame-gui__inventory-item.is--selected:hover {
+      opacity: 1.0; }
+    .ingame-gui__inventory-item.is--selected {
+      opacity: 0.8; }
+    .ingame-gui__inventory-item-icon {
+      width: 5vw;
+      height: 2.5vw;
+      margin-right: 2vw; }
+    .ingame-gui__inventory-item-name, .ingame-gui__inventory-item-weight, .ingame-gui__inventory-item-equipped {
+      display: flex;
+      align-items: center; }
+    .ingame-gui__inventory-item-name, .ingame-gui__inventory-item-weight {
+      margin-right: 1vw; }
+  .ingame-gui__inventory-stored-buttons, .ingame-gui__inventory-equipped-buttons {
+    height: 4.5vw;
+    margin: 0 1vw 1vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    user-select: none; }
+  .ingame-gui__inventory-stored-button, .ingame-gui__inventory-equipped-button {
+    outline: none;
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-color: transparent;
+    border: 1px solid #18fc00;
+    color: #18fc00;
+    font-family: "Orbitron", sans-serif;
+    font-size: 1.5vw;
+    height: 3.6vw;
+    width: 100%;
+    margin-right: 1vw; }
+    .ingame-gui__inventory-stored-button:last-child, .ingame-gui__inventory-equipped-button:last-child {
+      margin-right: 0; }
+    .ingame-gui__inventory-stored-button:hover, .ingame-gui__inventory-equipped-button:hover {
+      background-color: rgba(0, 0, 0, 0.667); }
+  .ingame-gui__title {
+    display: block;
+    font-size: 2.5vw;
+    font-weight: 900;
+    margin: 1vw;
+    user-select: none;
+    cursor: default;
+    color: #18fc00; }
+    .ingame-gui__title--secondary {
+      font-size: 1vw;
+      margin: 0; }
+  .ingame-gui__current-load {
+    border-top: 1px solid #18fc00;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 5.75vw;
+    left: 0;
+    right: 0;
+    height: 3vw;
+    color: #18fc00;
+    padding: 0 1vw; }
+    .ingame-gui__current-load-title, .ingame-gui__current-load-readout {
+      line-height: 3vw;
+      user-select: none; }
+    .ingame-gui__current-load-title {
+      text-align: left;
+      margin: 0; }
+    .ingame-gui__current-load-readout {
+      text-align: right; }
+
+/*# sourceMappingURL=game.css.map */

@@ -1,0 +1,8 @@
+TEXTURE FILE REQUIREMENTS
+
+
+Source textures for things must:
+
+> Be square (preferably power of 2) - if not the sampling coords will be off.
+
+

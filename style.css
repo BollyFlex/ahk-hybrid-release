@@ -1,0 +1,1116 @@
+/* GAME STYLESHEET
+******************/
+
+@font-face {
+	font-family: 'VerminVibes1989';
+	src: url('fonts/Vermin-Vibes-1989.eot');
+	src: url('fonts/Vermin-Vibes-1989.eot?#iefix') format('embedded-opentype'),
+		url('fonts/Vermin-Vibes-1989.woff2') format('woff2'),
+		url('fonts/Vermin-Vibes-1989.woff') format('woff'),
+		url('fonts/Vermin-Vibes-1989.ttf') format('truetype'),
+		url('fonts/Vermin-Vibes-1989.svg#Vermin-Vibes-1989') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+
+body {
+	background: #333;
+	color: #fff;
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	overflow: hidden; /* Hide scrollbars */
+}
+canvas {
+	background: #000;
+	margin: 0;
+	image-rendering: pixelated; 
+	image-rendering: -moz-crisp-edges;
+}
+#cvs,
+#hud-cvs {
+	width: 100%;
+}
+#hud-cvs {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: transparent;
+}
+#debugcvs {
+	width: 67%;
+	margin: 0 auto;
+}
+.frame-stats {
+	display: block;
+	width: auto;
+	background: #000;
+	margin: 0 auto 4px;
+}
+.stat-readout {
+	display: inline-block;
+	margin: 5px;
+	min-width: 128px;
+}
+.debugkeys p{
+	display: inline-block;
+	line-height: 32px;
+	width: 50px;
+	background: #aaa;
+}
+.debugkeys p.active {
+	background: #0f0;
+}
+
+#debug-tools {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+/* HUD
+******/
+
+.game-gui {
+	display: block;
+	position: relative;
+	width: 100%;
+	font-family: 'VerminVibes1989', sans-serif; /*sans-serif;*/ /*'Black Ops One', sans-serif;*/
+}
+
+.game-hud {
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.hud-panel {
+	display: block;
+	position: absolute;
+	background: #666;
+	width: 20%;
+	box-shadow: 2px 2px 0px #000;
+}
+.hud-bar {
+	display: block;
+	position: relative;
+	width: 100%;
+	max-width: 100%;
+	height: 100%;
+	background: #333;
+}
+.hud-bar-scrubber {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	height: 100%;
+	background: #0a0;
+}
+.hud-label {
+	display: block;
+	position: absolute;
+	bottom: 100%;
+}
+.hud-label,
+.hud-label-divider,
+.hud-readout {
+	font-size: 2vw;
+	text-shadow: 2px 2px 0px #000;
+}
+.hud-readouts-group { 
+	max-height: 100%;
+}
+.hud-panel.armour {
+	height: 3vw;
+	bottom: 10vw;
+	left: 2vw;
+}
+.hud-panel.health {
+	height: 3vw;
+	bottom: 3vw;
+	left: 2vw;
+}
+.hud-panel.ammo {
+	height: 3vw;
+	bottom: 3vw;
+	right: 2vw;
+	text-align: right;
+	padding: 0 4px;
+}
+.hud-panel.ammo .hud-label-divider,
+.hud-panel.ammo .hud-readout {
+	display: block;
+	float: right;
+	line-height: 3vw;
+	margin-left: 1vw;
+}
+.hud-panel.ammo .hud-label {
+	position: absolute;
+    left: 0;
+}
+
+/*
+* Menu GUI
+**********/
+
+.menu.show,
+.menu__screen.show {
+
+	display: block;
+}
+
+.menu {
+
+	display: none;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.menu__screen {
+
+	display: none;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	border: 2px solid #555;
+	box-shadow: 0px 0px 32px #000;
+}
+
+.menu__screen--main {
+
+	border: none;
+	box-shadow: none;
+}
+
+.menu__screen--dialog {
+
+	background: rgba(0,0,0,0.75);
+}
+
+
+
+.menu__dialog-title {
+
+	
+}
+
+.menu__dialog-details {
+
+	font-size: 24px;
+	font-weight: bold;
+	padding: 0 20%;
+	margin-top: 20%;
+}
+
+.menu__logo {
+	
+	display: block;
+	position: absolute;
+	top: 4vw;
+	left: auto;
+	right: auto;
+	width: 40vw;
+	-webkit-backface-visibility: hidden;
+}
+
+.menu__screen--main .menu__logo {
+
+	top: 10vh;
+	width: 50vw;
+	transition: transform 1s cubic-bezier( 1, 0, .75, 1 );
+	transform: translateY(-75vh);
+}
+
+
+.has--init .menu__logo,
+.menu__secondary-logo {
+
+	animation-name: logoBob;
+	animation-duration: 1.5s;
+	animation-iteration-count: infinite;
+	animation-timing-function: cubic-bezier( .4, 0, .6, 1 );
+}
+
+.has--init .menu__logo {
+
+	transform: translateY(0vh);
+	animation-delay: 1s; /* must match length of any intro transition */
+}
+
+.menu__bg,
+.menu__content {
+
+	display: flex;
+	position: absolute;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.menu__content.menu__content--dialog {
+
+	display: flex;
+	position: absolute;
+	top: 15%;
+	right: 15%;
+	bottom: 15%;
+	left: 15%;
+	background: #333;
+	border: 1px solid #ccc;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.menu__panel {
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	flex-grow: 1;
+	width: 100%;
+	position: relative;
+}
+
+.menu__screen--loadgame .menu__panel:nth-child(2) {
+
+	flex-grow: 6;
+}
+
+.menu__panel--row {
+
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.menu__panel:first-child {
+
+	align-items: flex-end;
+}
+
+.menu__bg--0 {
+
+	background-image: url('img/gui/starfield.png');
+}
+
+.menu__bg--1 {
+
+	background-image: linear-gradient(to top, rgba(150,150,255,1.0), 1%, rgba(0,0,255,1.0), 15%, rgba(0,0,0,1.0), 60%, rgba(0,0,0,0.1));
+}
+
+.menu__screen--pause .menu__bg {
+
+	background: rgba( 0, 0, 0, 0.5 );
+}
+
+.menu__screen--loadgame .menu__logo {
+
+	position: relative;
+	top: 7%;
+	width: 50%;
+	margin-left: 30%;
+}
+
+.menu__screen--loadgame .menu__button--cancel {
+
+	position: absolute;
+	top: 56%;
+	left: 0;
+}
+
+.menu__screen--loadgame .menu__button:last-child {
+
+	margin: 10px auto;
+}
+
+.menu__screen--dialog .menu__logo {
+
+	top: 5%;
+}
+
+.menu__screen--loadgame .menu__button {
+
+	width: 30vw;
+}
+
+.menu__scrolling-list {
+
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: 2% 10%;
+	background: #000;
+	padding: 0;
+	overflow-y: scroll;
+	height: 85%;
+	border: 1px solid #ccc;
+	border-left:none;
+	border-right: none;
+}
+
+.menu__scrolling-list::-webkit-scrollbar {
+    
+    width: 25px;
+}
+ 
+.menu__scrolling-list::-webkit-scrollbar-track {
+    
+    background: #000;
+    cursor: pointer;
+}
+ 
+.menu__scrolling-list::-webkit-scrollbar-thumb {
+  
+	background-color: #444;
+	border: 1px solid #ccc;
+	cursor: pointer;
+}
+
+.menu__scrolling-list::-webkit-scrollbar-button {
+  
+	background-color: #444;
+	cursor: pointer;
+	border: 1px solid #ccc;
+	height: 25px;
+}
+
+.menu__saved-game-list-item {
+
+	display: block;
+	background: #333;
+	text-align: left;
+	margin: 0 4px 4px 4px;
+	border: 1px solid transparent;
+	list-style-type: none;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 20px;
+	padding: 2.5%;
+	cursor: pointer;
+}
+
+.menu__saved-game-list-item:first-child {
+
+	margin-top: 4px;
+}
+
+.menu__saved-game-list-item:hover,
+.menu__saved-game-list-item:focus {
+
+	background: #555;
+	outline: none;
+}
+
+.menu__saved-game-list-item.selected {
+
+	background: #888;
+	border: 1px solid #ccc;
+}
+
+.menu__button {
+
+	display: block;
+	background: transparent;
+	border: none;
+	height: 32px;
+	min-height: 32px;
+	line-height: 32px;
+	cursor: pointer;
+	color: #ddd;
+	margin: 10px auto;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: 50%;
+	width: 300px;
+	text-transform: uppercase;
+}
+
+.menu__button:hover,
+.menu__button:active,
+.menu__button:visited {
+
+	outline: none;
+}
+
+.menu__button:hover {
+
+	color: #fff;
+}
+
+.menu__screen--pad-buttons .menu__button:last-child {
+
+	margin-bottom: 7vh;
+}
+
+.menu__button--resume {
+	background-image: url('img/gui/resume-neon.svg');
+}
+.menu__button--resume:hover,
+.menu__button--resume:focus {
+	background-image: url('img/gui/resume-neon-hover.svg');
+	outline: none;
+}
+.menu__button--newgame {
+	background-image: url('img/gui/newgame-neon.svg');
+}
+.menu__button--newgame:hover,
+.menu__button--newgame:focus {
+	background-image: url('img/gui/newgame-neon-hover.svg');
+	outline: none;
+}
+.menu__button--savegame {
+	background-image: url('img/gui/savegame-neon.svg');
+}
+.menu__button--savegame:hover,
+.menu__button--savegame:focus {
+	background-image: url('img/gui/savegame-neon-hover.svg');
+	outline: none;
+}
+.menu__button--loadgame {
+	background-image: url('img/gui/loadgame-neon.svg');
+}
+.menu__button--loadgame:hover,
+.menu__button--loadgame:focus {
+	background-image: url('img/gui/loadgame-neon-hover.svg');
+	outline: none;
+}
+.menu__button--options {
+	background-image: url('img/gui/options-neon.svg');
+}
+.menu__button--options:hover,
+.menu__button--options:focus {
+	background-image: url('img/gui/options-neon-hover.svg');
+	outline: none;
+}
+.menu__button--quit {
+	background-image: url('img/gui/quit-neon.svg');
+}
+.menu__button--quit:hover,
+.menu__button--quit:focus {
+	background-image: url('img/gui/quit-neon-hover.svg');
+	outline: none;
+}
+.menu__button--delete {
+	background-image: url('img/gui/delete-neon.svg');
+}
+.menu__button--delete:hover,
+.menu__button--delete:focus {
+	background-image: url('img/gui/delete-neon-hover.svg');
+	outline: none;
+}
+.menu__button--export {
+	background-image: url('img/gui/export-neon.svg');
+}
+.menu__button--export:hover,
+.menu__button--export:focus {
+	background-image: url('img/gui/export-neon-hover.svg');
+	outline: none;
+}
+.menu__button--load {
+	background-image: url('img/gui/load-neon.svg');
+}
+.menu__button--load:hover,
+.menu__button--load:focus {
+	background-image: url('img/gui/load-neon-hover.svg');
+	outline: none;
+}
+.menu__button--cancel {
+	background-image: url('img/gui/cancel-neon.svg');
+}
+.menu__button--cancel:hover,
+.menu__button--cancel:focus {
+	background-image: url('img/gui/cancel-neon-hover.svg');
+	outline: none;
+}
+
+@keyframes logoBob {
+
+	0% {
+		transform: translateY(0vw);
+	}
+	50% {
+		transform: translateY(-0.5vw);
+	}
+	100% {
+		transform: translateY(0vw);
+	}
+}
+
+.menu__author-info {
+
+	display: block;
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+
+.menu__screen--main .menu__button {
+
+	transition: transform 0.5s cubic-bezier(.84,.01,.89,1.33);
+	transform: translateX(-100vw);
+}
+
+.menu__screen--main.has--init .menu__button--newgame {
+
+	transform: translateX(0vw);
+	transition-delay: 0.8s;
+}
+
+.menu__screen--main.has--init .menu__button--loadgame {
+
+	transform: translateX(0vw);
+	transition-delay: 0.95s;
+}
+
+.menu__screen--main.has--init .menu__button--options {
+
+	transform: translateX(0vw);
+	transition-delay: 1.1s;
+}
+
+
+/* INGAME GUI
+*******************************************************/
+
+.ingame-gui {
+
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: 0;
+	padding: 0;
+	pointer-events: none;
+}
+
+.ingame-gui__notification-list {
+	
+	display: block;
+	position: absolute;
+	bottom: 6vw;
+	left: 1vw;
+	width: 40vw;
+	list-style-type: none;
+	padding: 0;
+}
+
+.ingame-gui__notification-item {
+
+	text-align: left;
+	margin-bottom: 0.5vw;
+	font-size: 1.5vw;
+}
+
+.ingame-gui__screen {
+
+	display: none;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	background: #888;
+	border: 1px solid #ccc;
+	font-size: 1.25vw;
+	pointer-events: auto;
+}
+
+.ingame-gui__screen.show {
+
+	display: block;
+}
+
+.ingame-gui__screen.ingame-gui__screen--loot {
+
+	left: 5vw;
+	width: 25vw;
+}
+
+.ingame-gui__screen.ingame-gui__screen--logs {
+
+	left: 5vw;
+	width: 33vw;
+}
+
+.ingame-gui__screen.ingame-gui__screen--doorlock {
+
+	right: 5vw;
+	width: 20vw;
+}
+
+.ingame-gui__title {
+
+	display: block;
+	margin-left: 1vw;
+	height: 100%;
+	margin-top: 1vw;
+	margin-bottom: 1vw;
+}
+
+.ingame-gui__title.ingame-gui__title--logs {
+
+	
+}
+
+.ingame-gui__title.ingame-gui__title--doorlock {
+
+	
+}
+
+.ingame-gui__close {
+
+	display: block;
+	position: absolute;
+	top: 1vw;
+	right: 1vw;
+	width: 3.5vw;
+	height: 3.5vw;
+	background: #444;
+	border: 1px solid #ccc;
+	color: #fff;
+	cursor: pointer;
+}
+
+.ingame-gui__scrolling-list-legend,
+.ingame-gui__scrolling-list {
+
+	list-style-type: none;
+	padding: 0;
+	margin: 0 1vw;
+}
+
+.ingame-gui__scrolling-list-legend {
+
+	background: #555;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	border: 1px solid #ccc;
+	border-bottom: none;
+}
+
+.ingame-gui__legend-item {
+
+	text-transform: uppercase;
+	padding: 0.25vw 0;
+	text-transform: uppercase;
+	width: 33%;
+	padding-left: 1vw;
+	text-align: left;
+}
+
+.ingame-gui__legend-item.ingame-gui__legend-item--date,
+.ingame-gui__log-item-date {
+
+	width: 20%;
+}
+
+.ingame-gui__legend-item.ingame-gui__legend-item--type,
+.ingame-gui__log-item-type {
+	
+	width: 20%;
+}
+
+.ingame-gui__legend-item.ingame-gui__legend-item--title,
+.ingame-gui__log-item-title {
+	
+	width: 60%;
+}
+
+.ingame-gui__scrolling-list {
+
+	background: #000;
+	height: calc(82%);
+	border: 1px solid #ccc;
+	border-right: none;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.ingame-gui__scrolling-list::-webkit-scrollbar,
+.ingame-gui__log-display::-webkit-scrollbar {
+    
+    width: 25px;
+}
+ 
+.ingame-gui__scrolling-list::-webkit-scrollbar-track,
+.ingame-gui__log-display::-webkit-scrollbar-track {
+    
+    background: #000;
+    cursor: pointer;
+    border: 1px inset #ccc;
+}
+ 
+.ingame-gui__scrolling-list::-webkit-scrollbar-thumb,
+.ingame-gui__log-display::-webkit-scrollbar-thumb {
+  
+	background-color: #444;
+	cursor: pointer;
+	border: 1px inset #ccc;
+}
+
+.ingame-gui__scrolling-list::-webkit-scrollbar-button,
+.ingame-gui__log-display::-webkit-scrollbar-button {
+  
+	background-color: #444;
+	cursor: pointer;
+	height: 25px;
+	border: 1px inset #ccc;
+}
+
+.ingame-gui__log-item {
+
+	padding-top: 0.5vw;
+	padding-bottom: 0.35vw;
+	background: #333;
+	border-bottom: 1px solid #666;
+	cursor: pointer;
+	display: flex;
+	flex-direction: row;
+}
+
+.ingame-gui__log-item:last-child {
+
+	border-bottom: none;
+}
+
+.ingame-gui__log-item:hover {
+
+	background: #444;
+}
+
+.ingame-gui__log-item.is--selected {
+
+	background: #555;
+}
+
+.ingame-gui__log-item-date {
+
+	width: 20%;
+}
+
+.ingame-gui__log-item-date,
+.ingame-gui__log-item-type,
+.ingame-gui__log-item-title {
+
+	display: inline-flex;
+	padding-left: 1vw;
+	text-align: left;
+}
+
+.ingame-gui__sort-by {
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	padding: 0 1vw;
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
+}
+
+.ingame-gui__sort-by-label {
+
+	width: 20%;
+}
+
+.ingame-gui__sort-button {
+
+	width: 25%;
+	background: #444;
+	border: 1px solid #ccc;
+	margin-left: 1vw;
+	color: #fff;
+	cursor: pointer;
+}
+
+.ingame-gui__log-display {
+
+	display: block;
+	height: calc(100% - 2px);
+	background: #444;
+	border: 1px solid #ccc;
+	border-right: none;
+	margin-left: 1vw;
+	margin-right: 1vw;
+	text-align: left;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+.ingame-gui__log-display-container {
+
+	padding: 1vw;
+}
+
+.ingame-gui__log-display-container > * {
+	
+	margin-top: 0;
+	margin-bottom: 1vw;
+}
+
+.ingame-gui__log-display-container > *:last-child {
+
+	margin-bottom: 0;
+}
+
+.ingame-gui__row {
+
+	margin-bottom: 3%;
+	overflow: hidden;
+}
+
+.ingame-gui__row.ingame-gui__row--title {
+
+	height: 5vw;
+}
+
+.ingame-gui__row.ingame-gui__row--list {
+
+	height: 10vw;
+}
+
+.ingame-gui__row.ingame-gui__row--sortby {
+
+	height: 2vw;
+}
+
+.ingame-gui__row.ingame-gui__row--display {
+
+	height: 20vw;
+}
+
+.ingame-gui__row.ingame-gui__row--numeric-display {
+
+	height: 5vw;
+	margin-left: 1vw;
+	margin-right: 1vw;
+}
+
+.ingame-gui__row.ingame-gui__row--numeric-keypad {
+
+	height: 15vw;
+}
+
+.ingame-gui__numeric-display {
+
+	background: #444;
+	height: calc(100% - 4px);
+	border: 1px solid #ccc;
+	font-size: 4.5vw;
+	color: #fff;
+	padding-left: 2.5vw;
+	text-align: left;
+}
+
+.ingame-gui__numeric-keypad {
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	margin: 0 1vw;
+	background: #444;
+	height: calc(100% - 2px);
+	border: 1px solid #ccc;
+}
+
+.ingame-gui__numeric-keypad-button {
+
+	width: 33.333%;
+	height: 25%;
+	background: #ccc;
+	border: 2px solid #444;
+	font-size: 2vw;
+	color: #444;
+	cursor: pointer;
+}
+
+.ingame-gui__numeric-keypad-button:focus {
+
+	outline: none;
+}
+
+.ingame-gui__numeric-keypad-button.is--selected,
+.ingame-gui__numeric-keypad-button:active {
+
+	background: #eee;
+}
+
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--7,
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--8,
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--9 {
+
+	border-top-width: 4px;
+}
+
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--9,
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--6,
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--3,
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--enter {
+
+	border-right-width: 4px;
+}
+
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--0,
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--cancel,
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--enter {
+
+	border-bottom-width: 4px;
+}
+
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--7,
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--4,
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--1,
+.ingame-gui__numeric-keypad-button.ingame-gui__numeric-keypad-button--0 {
+
+	border-left-width: 4px;
+}
+
+.ingame-gui__screen.ingame-gui__screen--inventory {
+
+	top: 5vw;
+	right: 5vw;
+	bottom: 5vw;
+	left: 5vw;
+	transform: none;
+}
+
+.ingame-gui__screen--inventory .ingame-gui__row.ingame-gui__row--title {
+
+	text-align: center;
+}
+
+.ingame-gui__title--inventory {
+
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ingame-gui__screen--inventory .ingame-gui__screen-content {
+
+	display: flex;
+	flex-direction: row;
+	height: 38.75vw;
+}
+
+.ingame-gui__column.ingame-gui__column--stored-items,
+.ingame-gui__column.ingame-gui__column--equipped-items {
+
+	width: 50%;
+}
+
+.ingame-gui__column--stored-items .ingame-gui__row--buttons {
+
+	margin-bottom: 0;
+}
+
+.ingame-gui__screen--inventory .ingame-gui__row.ingame-gui__row--list {
+
+	height: calc(32vw + 2px);
+}
+
+.ingame-gui__screen--inventory .ingame-gui__row.ingame-gui__row--list .ingame-gui__scrolling-list {
+
+	height: 32vw;
+}
+
+.ingame-gui__inventory-item {
+
+	display: flex;
+	flex-direction: row;
+	height: 4vw;
+	padding: 1vw;
+	background: #444;
+	border: 1px solid #ccc;
+	cursor: pointer;
+	margin: 0.5vw;
+}
+
+.ingame-gui__inventory-item:last-child {
+
+	border-bottom: none;
+}
+
+.ingame-gui__inventory-item:hover {
+
+	background: #666;
+}
+
+.ingame-gui__inventory-item.is--selected {
+
+	background: #888;
+}
+
+.ingame-gui__inventory-item-icon {
+
+	width: 5vw;
+	height: 5vw;
+	margin-right: 2vw;
+}
+
+.ingame-gui__inventory-item-name,
+.ingame-gui__inventory-item-weight {
+
+	display: flex;
+    align-items: center;
+}
+
+.ingame-gui__inventory-item-name {
+
+	margin-right: 1vw;
+}
+
+.ingame-gui__inventory-stored-buttons {
+
+	height: 4.5vw;
+	margin: 0 1vw 1vw;
+	display: flex;
+	flex-direction: row;
+}
+
+.ingame-gui__inventory-stored-button {
+
+	width: 50%;
+	border: none;
+	background: none;
+	outline: none;
+	cursor: pointer;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: 50%;
+}
+
+.ingame-gui__inventory-stored-button.ingame-gui__inventory-stored-button--drop-stored {
+
+	background-image: url('img/gui/paused-logo.svg');
+}
+
+.ingame-gui__inventory-stored-button.ingame-gui__inventory-stored-button--equip-stored {
+
+	background-image: url('img/gui/paused-logo.svg');
+}
+
+.ingame-gui__screen--inventory .ingame-gui__row.ingame-gui__row--item-details {
+
+	height: 32vw;
+	background: #666;
+	border: 1px solid #ccc;
+}

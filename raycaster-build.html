@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Raycaster 2.0 | Game</title>
+	<link href="https://fonts.googleapis.com/css?family=Orbitron:400,500,700,900" rel="stylesheet">
+	<link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+	<div class="game-gui">
+
+		<!-- Game canvas -->
+		<canvas class="canvas canvas--game" id="cvs" width="400" height="225"></canvas>
+
+		<!-- WebGL background (sky) canvas -->
+		<canvas class="canvas canvas--bg" id="gl-bg-cvs" width="1920" height="1080"></canvas>
+
+		<!-- WebGL game canvas -->
+		<canvas class="canvas canvas--webgl" id="gl-cvs" width="1920" height="1080"></canvas>
+
+		<!-- WebGL foreground (weaponview) canvas -->
+		<canvas class="canvas canvas--fg" id="gl-fg-cvs" width="1920" height="1080"></canvas>
+
+		<!-- HUD canvas -->
+		<canvas class="canvas canvas--hud" id="hud-cvs" width="400" height="225"></canvas>
+
+		<!-- HUD GUI -->
+		<div class="hud-gui" data-hud-gui>
+			
+			<!-- Health -->
+			<div class="hud-gui__readout hud-gui__readout--health" data-health-gui>
+				<!-- <div class="hud-gui__readout-bar" data-readout-bar></div> -->
+			</div>
+
+			<!-- Armour -->
+			<div class="hud-gui__readout hud-gui__readout--armour" data-armour-gui>
+				<!-- <div class="hud-gui__readout-bar" data-readout-bar></div> -->
+			</div>
+
+			<!-- Mag ammo -->
+			<div class="hud-gui__readout hud-gui__readout--mag-ammo" data-mag-ammo-gui>
+				<!-- <div class="hud-gui__readout-round hud-gui__readout-round--pistol" data-readout-round></div> -->
+			</div>
+
+			<!-- Reserve ammo -->
+			<div class="hud-gui__readout hud-gui__readout--total-ammo" data-total-ammo-gui>
+				<!-- <div class="hud-gui__readout-mag hud-gui__readout-mag--pistol" data-readout-mag></div> -->
+			</div>
+
+			<!-- Items -->
+			<div class="hud-gui__readout hud-gui__readout--items" data-items-gui>
+				<div class="hud-gui__readout-item hud-gui__readout-item--pistol" data-item-gui-current></div>
+				<div class="hud-gui__readout-item hud-gui__readout-item--offhand hud-gui__readout-item--assaultrifle" data-item-gui-offhand></div>
+				<div class="hud-gui__readout-item hud-gui__readout-item--offhand hud-gui__readout-item--shotgun" data-item-gui-offhand></div>
+			</div>
+
+		</div>
+
+		<!-- Ingame GUI system -->
+		<div class="ingame-gui" data-ingame-gui>
+
+			<!-- Notification GUI -->
+			<ul class="ingame-gui__notification-list" data-notification-gui>
+				<!-- <li class="ingame-gui__notification-item" data-notification>example notification</li> -->
+			</ul>
+
+			<!-- Inventory GUI -->
+			<div class="ingame-gui__screen ingame-gui__screen--inventory" data-inventory-gui>
+				<div class="ingame-gui__row ingame-gui__row--title">
+					<button class="ingame-gui__close" data-close-button>X</button>
+					<h3 class="ingame-gui__title">INVENTORY</h3>
+				</div>
+				<div class="ingame-gui__screen-content">
+					<div class="ingame-gui__column ingame-gui__column--stored-items">
+						<div class="ingame-gui__row ingame-gui__row--list">
+							<ul class="ingame-gui__scrolling-list ingame-gui__scrolling-list--inventory-items" data-stored-items-list>
+								<li class="ingame-gui__inventory-item" data-stored-item>
+									<img class="ingame-gui__inventory-item-icon" src="img/gui/#.svg" alt="name" />
+									<span class="ingame-gui__inventory-item-name" data-item-name>Item name</span>
+									<span class="ingame-gui__inventory-item-weight" data-item-weight data-item-weight-value="3250">3.25kg</span>
+								</li>
+							</ul>
+							<div class="ingame-gui__current-load">
+								<h4 class="ingame-gui__current-load-title">Current load: </h4>
+								<span class="ingame-gui__current-load-readout"><span data-current-load>0</span> kg</span>
+							</div>
+						</div>
+						<div class="ingame-gui__row ingame-gui__row--buttons">
+							<div class="ingame-gui__inventory-stored-buttons">
+								<button class="ingame-gui__inventory-stored-button ingame-gui__inventory-stored-button--drop" data-drop-item-button>Drop</button>
+								<button class="ingame-gui__inventory-stored-button ingame-gui__inventory-stored-button--equip" data-equip-item-button>Equip</button>
+							</div>
+						</div>
+					</div>
+					<div class="ingame-gui__column ingame-gui__column--equipped-items">
+						<div class="ingame-gui__row ingame-gui__row--item-details">
+							<div class="ingame-gui__item-details">
+								<div class="ingame-gui__item-details-container">
+									<h4 class="ingame-gui__item-details-title" data-selected-item-name>Item name</h4>
+									<div class="ingame-gui__item-details-row">
+										<table class="ingame-gui__item-details-stats" data-selected-item-stat-table>
+											<!-- <tr>
+												<td>Weight</td>
+												<td>1.6kg</td>
+											</tr> -->
+										</table>
+										<div class="ingame-gui__item-details-icon" data-selected-item-image></div>
+									</div>
+									<div class="ingame-gui__item-details-description" data-selected-item-description>
+										<p>This is a text description of the item. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="ingame-gui__row ingame-gui__row--equipped-items">
+							<div class="ingame-gui__equipped-items">
+								<div class="ingame-gui__equip-slot">
+									<div class="ingame-gui__equip-slot-container" data-equip-slot data-equip-slot-occupied="false" data-equip-slot-num="1">
+										<!-- <div class="ingame-gui__equip-slot-item" data-equip-slot-item></div> -->
+									</div>
+								</div>
+								<div class="ingame-gui__equip-slot">
+									<div class="ingame-gui__equip-slot-container" data-equip-slot data-equip-slot-occupied="false" data-equip-slot-num="2"></div>
+								</div>
+								<div class="ingame-gui__equip-slot">
+									<div class="ingame-gui__equip-slot-container" data-equip-slot data-equip-slot-occupied="false" data-equip-slot-num="3"></div>
+								</div>
+							</div>
+						</div>
+						<div class="ingame-gui__row ingame-gui__row--buttons">
+							<div class="ingame-gui__inventory-equipped-buttons">
+								<button class="ingame-gui__inventory-equipped-button ingame-gui__inventory-equipped-button--store" data-store-item-button>Unequip</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Loot GUI -->
+			<div class="ingame-gui__screen ingame-gui__screen--loot" data-loot-gui></div>
+			
+			<!-- Logs GUI -->
+			<div class="ingame-gui__screen ingame-gui__screen--logs" data-logs-gui>
+				<div class="ingame-gui__row ingame-gui__row--title">
+					<button class="ingame-gui__close" data-close-button>X</button>
+					<h3 class="ingame-gui__title">LOGS</h3>
+				</div>
+				<div class="ingame-gui__row ingame-gui__row--list">
+					<ul class="ingame-gui__scrolling-list-legend">
+						<li class="ingame-gui__legend-item ingame-gui__legend-item--title">Title</li>
+						<li class="ingame-gui__legend-item ingame-gui__legend-item--date">Date</li>
+						<li class="ingame-gui__legend-item ingame-gui__legend-item--type">Type</li>
+					</ul>
+					<ul class="ingame-gui__scrolling-list" data-log-list>
+						<li class="ingame-gui__log-item" data-log-list-item>
+							<span class="ingame-gui__log-item--title" data-log-item-title>Example log listing title</span>
+							<span class="ingame-gui__log-item--date" data-log-item-date data-log-item-date-value="11-07-2178">11:07:2178</span>
+							<span class="ingame-gui__log-item--type" data-log-item-type>Personal</span>
+						</li>
+						<li class="ingame-gui__log-item" data-log-list-item>
+							<span class="ingame-gui__log-item--title" data-log-item-title>Example log listing title</span>
+							<span class="ingame-gui__log-item--date" data-log-item-date data-log-item-date-value="11-07-2178">11:07:2178</span>
+							<span class="ingame-gui__log-item--type" data-log-item-type>Personal</span>
+						</li>
+						<li class="ingame-gui__log-item" data-log-list-item>
+							<span class="ingame-gui__log-item--title" data-log-item-title>Example log listing title</span>
+							<span class="ingame-gui__log-item--date" data-log-item-date data-log-item-date-value="11-07-2178">11:07:2178</span>
+							<span class="ingame-gui__log-item--type" data-log-item-type>Personal</span>
+						</li>
+						<li class="ingame-gui__log-item" data-log-list-item>
+							<span class="ingame-gui__log-item--title" data-log-item-title>Example log listing title</span>
+							<span class="ingame-gui__log-item--date" data-log-item-date data-log-item-date-value="11-07-2178">11:07:2178</span>
+							<span class="ingame-gui__log-item--type" data-log-item-type>Personal</span>
+						</li>
+						<li class="ingame-gui__log-item" data-log-list-item>
+							<span class="ingame-gui__log-item--title" data-log-item-title>Example log listing title</span>
+							<span class="ingame-gui__log-item--date" data-log-item-date data-log-item-date-value="11-07-2178">11:07:2178</span>
+							<span class="ingame-gui__log-item--type" data-log-item-type>Personal</span>
+						</li>
+						<li class="ingame-gui__log-item" data-log-list-item>
+							<span class="ingame-gui__log-item--title" data-log-item-title>Example log listing title</span>
+							<span class="ingame-gui__log-item--date" data-log-item-date data-log-item-date-value="11-07-2178">11:07:2178</span>
+							<span class="ingame-gui__log-item--type" data-log-item-type>Personal</span>
+						</li>
+						<li class="ingame-gui__log-item" data-log-list-item>
+							<span class="ingame-gui__log-item--title" data-log-item-title>Example log listing title</span>
+							<span class="ingame-gui__log-item--date" data-log-item-date data-log-item-date-value="11-07-2178">11:07:2178</span>
+							<span class="ingame-gui__log-item--type" data-log-item-type>Personal</span>
+						</li>
+						<li class="ingame-gui__log-item" data-log-list-item>
+							<span class="ingame-gui__log-item--title" data-log-item-title>Example log listing title</span>
+							<span class="ingame-gui__log-item--date" data-log-item-date data-log-item-date-value="11-07-2178">11:07:2178</span>
+							<span class="ingame-gui__log-item--type" data-log-item-type>Personal</span>
+						</li>
+						<li class="ingame-gui__log-item" data-log-list-item>
+							<span class="ingame-gui__log-item--title" data-log-item-title>Example log listing title</span>
+							<span class="ingame-gui__log-item--date" data-log-item-date data-log-item-date-value="11-07-2178">11:07:2178</span>
+							<span class="ingame-gui__log-item--type" data-log-item-type>Personal</span>
+						</li>
+						<li class="ingame-gui__log-item" data-log-list-item>
+							<span class="ingame-gui__log-item--title" data-log-item-title>Example log listing title</span>
+							<span class="ingame-gui__log-item--date" data-log-item-date data-log-item-date-value="11-07-2178">11:07:2178</span>
+							<span class="ingame-gui__log-item--type" data-log-item-type>Personal</span>
+						</li>
+					</ul>
+				</div>
+				<div class="ingame-gui__row ingame-gui__row--sortby">
+					<div class="ingame-gui__sort-by">
+						<h3 class="ingame-gui__title ingame-gui__title--secondary">SORT BY</h3>
+						<button class="ingame-gui__sort-button" data-sort-button data-sort-by="date">date</button>
+						<button class="ingame-gui__sort-button" data-sort-button data-sort-by="type">type</button>
+						<button class="ingame-gui__sort-button" data-sort-button data-sort-by="title">title</button>
+					</div>
+				</div>
+				<div class="ingame-gui__row ingame-gui__row--display">
+					<div class="ingame-gui__log-display">
+						<div class="ingame-gui__log-display-container" data-log-content>
+							<h4>This is a log title</h4>
+							<p>Log content text lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum commodi quos asperiores animi, cupiditate eos voluptates incidunt temporibus, optio, libero, esse officia. Quia tempore, dicta, officiis provident assumenda quam officia?</p>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque animi esse dolor incidunt doloribus soluta beatae iste itaque, quaerat aliquid totam eligendi, delectus culpa quasi laboriosam omnis impedit nisi aperiam.</p>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque animi esse dolor incidunt doloribus soluta beatae iste itaque, quaerat aliquid totam eligendi, delectus culpa quasi laboriosam omnis impedit nisi aperiam.</p>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque animi esse dolor incidunt doloribus soluta beatae iste itaque, quaerat aliquid totam eligendi, delectus culpa quasi laboriosam omnis impedit nisi aperiam.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Door lock GUI -->
+			<div class="ingame-gui__screen ingame-gui__screen--doorlock" data-doorlock-gui>
+				<div class="ingame-gui__row ingame-gui__row--title">
+					<button class="ingame-gui__close" data-close-button>X</button>
+					<h3 class="ingame-gui__title">PASSCODE</h3>
+				</div>
+				<div class="ingame-gui__row ingame-gui__row--numeric-display">
+					<div class="ingame-gui__numeric-display">88888</div>
+				</div>
+				<div class="ingame-gui__row ingame-gui__row--numeric-keypad">
+					<div class="ingame-gui__numeric-keypad">
+						<button class="ingame-gui__numeric-keypad-button ingame-gui__numeric-keypad-button--7" data-keypad-button data-key-value="7">7</button>
+						<button class="ingame-gui__numeric-keypad-button ingame-gui__numeric-keypad-button--8" data-keypad-button data-key-value="8">8</button>
+						<button class="ingame-gui__numeric-keypad-button ingame-gui__numeric-keypad-button--9" data-keypad-button data-key-value="9">9</button>
+						<button class="ingame-gui__numeric-keypad-button ingame-gui__numeric-keypad-button--4" data-keypad-button data-key-value="4">4</button>
+						<button class="ingame-gui__numeric-keypad-button ingame-gui__numeric-keypad-button--5" data-keypad-button data-key-value="5">5</button>
+						<button class="ingame-gui__numeric-keypad-button ingame-gui__numeric-keypad-button--6" data-keypad-button data-key-value="6">6</button>
+						<button class="ingame-gui__numeric-keypad-button ingame-gui__numeric-keypad-button--1" data-keypad-button data-key-value="1">1</button>
+						<button class="ingame-gui__numeric-keypad-button ingame-gui__numeric-keypad-button--2" data-keypad-button data-key-value="2">2</button>
+						<button class="ingame-gui__numeric-keypad-button ingame-gui__numeric-keypad-button--3" data-keypad-button data-key-value="3">3</button>
+						<button class="ingame-gui__numeric-keypad-button ingame-gui__numeric-keypad-button--0" data-keypad-button data-key-value="0">0</button>
+						<button class="ingame-gui__numeric-keypad-button ingame-gui__numeric-keypad-button--cancel" data-keypad-button data-key-value="cancel">Ca</button>
+						<button class="ingame-gui__numeric-keypad-button ingame-gui__numeric-keypad-button--enter" data-keypad-button data-key-value="enter">En</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Menu system -->
+		<div class="menu" data-menu>
+
+			<!-- Main menu -->
+			<div class="menu__screen menu__screen--main" data-menu-screen-main>
+				<div class="menu__bg menu__bg--0"></div>
+				<div class="menu__bg menu__bg--1"></div>
+				<div class="menu__content">
+					<img src="img/gui/hybrid-logo-3.svg" class="menu__logo" data-menu-screen-main-logo />
+					<div class="menu__author-info">AHK Team 2016</div>
+					<div class="menu__button-stack">
+						<button class="menu__button menu__button--newgame" data-menu-button data-button-click-event="newgame" tabindex="0">NEW GAME</button>
+						<button class="menu__button menu__button--loadgame" data-menu-button data-button-click-event="loadgame" tabindex="1">LOAD GAME</button>
+						<button class="menu__button menu__button--options" data-menu-button data-button-click-event="options" tabindex="2">OPTIONS</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Pause menu -->
+			<div class="menu__screen menu__screen--pause" data-menu-screen-pause>
+				<div class="menu__bg menu__bg--0"></div>
+				<div class="menu__content">
+					<h3 class="menu__logo menu__logo--secondary" data-menu-screen-main-logo>PAUSED</h3>
+					<div class="menu__button-stack">
+						<button class="menu__button menu__button--resume" data-menu-button data-button-click-event="unpause" tabindex="0">RESUME</button>
+						<button class="menu__button menu__button--savegame" data-menu-button data-button-click-event="savegame" tabindex="1">SAVE GAME</button>
+						<button class="menu__button menu__button--loadgame" data-menu-button data-button-click-event="loadgame" tabindex="2">LOAD GAME</button>
+						<button class="menu__button menu__button--options" data-menu-button data-button-click-event="options" tabindex="3">OPTIONS</button>
+						<button class="menu__button menu__button--quit" data-menu-button data-button-click-event="mainmenu" tabindex="4">MAIN MENU</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Death menu -->
+			<div class="menu__screen menu__screen--death" data-menu-screen-death>
+				<div class="menu__bg menu__bg--0"></div>
+				<div class="menu__content">
+					<h3 class="menu__logo menu__logo--secondary" data-menu-screen-main-logo>YOU ARE DEAD</h3>
+					<div class="menu__button-stack">
+						<button class="menu__button menu__button--loadgame" data-menu-button data-button-click-event="loadgame" tabindex="1">LOAD GAME</button>
+						<button class="menu__button menu__button--quit" data-menu-button data-button-click-event="mainmenu" tabindex="2">QUIT</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Load menu -->
+			<div class="menu__screen menu__screen--loadgame" data-menu-screen-load>
+				<div class="menu__bg menu__bg--0"></div>
+				<div class="menu__bg menu__bg--1"></div>
+				<div class="menu__content">
+					<div class="menu__panel menu__panel--row">
+						<button class="menu__button menu__button--cancel" data-menu-button data-button-click-event="closeloadgame" tabindex="0">BACK</button>
+						<h3 class="menu__logo menu__logo--secondary" data-menu-screen-main-logo>LOAD GAME</h3>
+					</div>
+					<div class="menu__panel">
+						<ul class="menu__scrolling-list" data-existing-saves-list>
+							<li class="menu__saved-game-list-item" data-existing-save tabindex="4">Example saved game 001 11-09-2016 23:20</li>
+							<li class="menu__saved-game-list-item selected" data-existing-save tabindex="5">Example saved game 001 11-09-2016 23:45</li>
+						</ul>
+					</div>
+					<div class="menu__panel menu__panel--row">
+						<button class="menu__button menu__button--delete" data-menu-button data-button-click-event="deletesave" tabindex="1">DELETE</button>
+						<button class="menu__button menu__button--deleteall" data-menu-button data-button-click-event="deleteallsaves" tabindex="2">DELETE ALL</button>
+						<button class="menu__button menu__button--load" data-menu-button data-button-click-event="loadsave" tabindex="3">LOAD</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Options menu -->
+			<div class="menu__screen menu__screen--options" data-menu-screen-options>
+				<div class="menu__bg menu__bg--0"></div>
+				<div class="menu__bg menu__bg--1"></div>
+				<div class="menu__content">
+					<div class="menu__panel menu__panel--row">
+						<button class="menu__button menu__button--cancel" data-menu-button data-button-click-event="closeoptions" tabindex="0">BACK</button>
+						<h3 class="menu__logo menu__logo--secondary" data-menu-screen-main-logo>OPTIONS</h3>
+					</div>
+					<div class="menu__panel">
+						<!-- Volume sliders -->
+						<h4 class="menu__logo menu__logo--tertiary">AUDIO</h4>
+						<div class="menu__slider">
+							<h5 class="menu__label">MASTER</h5>
+							<input class="menu__slider-range" type="range" min="0.0" value="0.0" max="1.0" step="0.01" tabindex="1" data-menu-button data-options-volume-master />
+							<span class="menu__slider-output" data-options-volume-master-output>0.0</span>
+						</div>
+						<div class="menu__slider">
+							<h5 class="menu__label">MUSIC</h5>
+							<input class="menu__slider-range" type="range" min="0.0" value="0.0" max="1.0" step="0.01" tabindex="2" data-menu-button data-options-volume-music />
+							<span class="menu__slider-output" data-options-volume-music-output>0.0</span>
+						</div>
+						<div class="menu__slider">
+							<h5 class="menu__label">SOUND EFFECTS</h5>
+							<input class="menu__slider-range" type="range" min="0.0" value="0.0" max="1.0" step="0.01" tabindex="3" data-menu-button data-options-volume-sound />
+							<span class="menu__slider-output" data-options-volume-sound-output>0.0</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Dialog - confirm delete save -->
+			<div class="menu__screen menu__screen--dialog" data-dialog-confirm-delete-save>
+				<div class="menu__content menu__content--dialog">
+					<h3 class="menu__logo menu__logo--secondary" data-menu-screen-main-logo>CONFIRM</h3>
+					<div class="menu__panel">
+						<p class="menu__dialog-details">Delete the selected save file? This action cannot be undone.</p>
+					</div>
+					<div class="menu__panel menu__panel--row">
+						<button class="menu__button menu__button--cancel" data-menu-button data-button-click-event="canceldeletesave"></button>
+						<button class="menu__button menu__button--delete" data-menu-button data-button-click-event="confirmdeletesave"></button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Dialog - confirm load save -->
+			<div class="menu__screen menu__screen--dialog" data-dialog-confirm-load-save>
+				<div class="menu__content menu__content--dialog">
+					<h3 class="menu__logo menu__logo--secondary" data-menu-screen-main-logo>CONFIRM</h3>
+					<div class="menu__panel">
+						<p class="menu__dialog-details">Load the selected save file? Any unsaved progress will be lost.</p>
+					</div>
+					<div class="menu__panel menu__panel--row">
+						<button class="menu__button menu__button--cancel" data-menu-button data-button-click-event="cancelloadsave"></button>
+						<button class="menu__button menu__button--load" data-menu-button data-button-click-event="confirmloadsave"></button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+	
+	<div class="debug__performance-stats">
+		<p id="loopCounter" class="debug__performance-stat">null</p>
+		<p id="fpsCounter" class="debug__performance-stat">null</p>
+		<p id="fpsLow" class="debug__performance-stat">null</p>
+		<p id="fpsHigh" class="debug__performance-stat">null</p>
+	</div>
+
+	<canvas class="canvas canvas--debug" id="debugcvs" width="400" height="225"></canvas>
+
+	<div class="debug__tools" id="debug-tools">
+		<button class="debug__tool" id="toggle-collision"></button>
+	</div>
+
+	<!-- Main script entry point -->
+	<script src="js/hybrid.js"></script>
+</body>
+</html>
